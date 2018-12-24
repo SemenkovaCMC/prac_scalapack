@@ -506,18 +506,22 @@ void SMatrix::dump() const {
 }
 
 void SMatrix::fill_H(int &global_i, int &global_j, int local_i, int local_j, int i_H, int j_H) {
-	for (int j = local_j; j
 	
 }
 
 void SMatrix::fill_matrix() {
-	for (int i = 0; i < nRows; i++){
-		for (int j = 0; j < nCols; j++){
-			if ((i >= myProcRowsOffset) && (j >= myProcColsOffset) &&
-			    (i < myProcRowsOffset + myProcRows) &&
-			    (j < myProcColsOffset + myProcCols) ) {
-					fill_H(i,j);
-				}
+	int idx = 0, H_offset = 0;
+	while ( (H_offset  > myProcColsOffset + myProcCols) &&
+			(H_offset  > myProcRowsOffset + myProcRows) ) {
+				idx += 1;
+				H_offset = H_offsets[idx];
+			}
+	for (int j = myProcColsOffset; j < myProcColsOffset + myProcCols; j++) {
+		for (int i = myProcRowsOffset; i < myProcRowsOffset + myProcRows; j++) {
+			if ( (i >= H_offset) && (i < H_offset + H_size) &&
+				 (j >= H_offset) && (j < H_offset + H_size) ) {
+					 fill_H();
+				 }
 		}
 	}
 }
