@@ -505,11 +505,18 @@ void SMatrix::dump() const {
 	}
 }
 
-void SMatrix::fill_H(int &global_i, int &global_j, int local_i, int local_j, int i_H, int j_H) {
-	
+void SMatrix::fill_H(int &global_i, int &global_j) {
+	int local_i = global_i - myProcRowsOffset, 
+		local_j = global_j - myProcColsOffset,
+		i_H = global_i - H_offset,
+		j_H = global_i - H_offset,
+		i_barrier = min(myProcRows);
+	for (int j = local_j; j < ?; j++){
+		
+	}
 }
 
-void SMatrix::fill_matrix() {
+void SMatrix::fill_matrix(std::map<int, int> H_offsets, std::map<int, int> H_sizes) {
 	int idx = 0, H_offset = 0;
 	while ( (H_offset  > myProcColsOffset + myProcCols) &&
 			(H_offset  > myProcRowsOffset + myProcRows) ) {
@@ -518,9 +525,9 @@ void SMatrix::fill_matrix() {
 			}
 	for (int j = myProcColsOffset; j < myProcColsOffset + myProcCols; j++) {
 		for (int i = myProcRowsOffset; i < myProcRowsOffset + myProcRows; j++) {
-			if ( (i >= H_offset) && (i < H_offset + H_size) &&
-				 (j >= H_offset) && (j < H_offset + H_size) ) {
-					 fill_H();
+			if ( (i >= H_offset) && (i < H_offset + H_sizes[idx]) &&
+				 (j >= H_offset) && (j < H_offset + H_sizes[idx]) ) {
+					 fill_H(i, j);
 				 }
 		}
 	}
