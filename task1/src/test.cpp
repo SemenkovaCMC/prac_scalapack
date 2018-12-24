@@ -90,6 +90,7 @@ int main(int argc, char **argv) {
 	MPI_Offset filesize;
 	MPI_File thefile, wrfile;
     
+    //cout<<'\n'<<"test1"<<'\n';
 	MPI_File_open(MPI_COMM_WORLD, file_H, MPI_MODE_RDONLY, MPI_INFO_NULL, &thefile);
 	MPI_File_set_view(thefile, 0, MPI_INT, MPI_INT, "native", MPI_INFO_NULL);
 	
@@ -99,6 +100,7 @@ int main(int argc, char **argv) {
 	SSize = buf[0]; // считаем матрицу квадратной	
 	// create matrix and read separately
 	SMatrix x(buf[0], buf[1]);
+	//cout<<'\n'<<"test2"<<'\n';
 	x.readf(thefile);
 
 	/*SType data[] = {
@@ -118,7 +120,7 @@ int main(int argc, char **argv) {
 	SType *W1 = diagonal_conversion(W, SSize, deltat, isRoot);
 	*D = *A;
 	(*D).DiagToMat(&SSize, W1);
-	// cout << *D << endl << endl; 
+	//cout << *D << endl << endl; 
 	// cout << *A << endl << endl;
 
 	(*A).mul((char *) "N", (char *) "N", D, &tmp);
@@ -137,6 +139,7 @@ int main(int argc, char **argv) {
 	SType wrbuf[SSize], wrbuf0[SSize];
 	for (int i = 0; i < SSize; i++) {
 		wrbuf[i] = complex<SReal>(0,0);
+		wrbuf0[i] = complex<SReal>(0,0);
 	}
 	if (atoi(argv[2]) == 0)
 	{
@@ -153,7 +156,7 @@ int main(int argc, char **argv) {
 		}
 		
 		
-		MPI_File_read(thefile, buf, 2, MPI_INT, &status);
+		//MPI_File_read(thefile, buf, 2, MPI_INT, &status);
 		MPI_File_close(&thefile);
 	}
 	else {

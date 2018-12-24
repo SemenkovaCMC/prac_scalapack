@@ -75,7 +75,7 @@ void SMatrix::create(int icon) {
 		myProcRows = numroc_(&nRows, &blockSize, &myProcRow, &root, &nProcRows);
 		myProcCols = numroc_(&nCols, &blockSize, &myProcCol, &root, &nProcCols);
 		myProcRowsOffset = npreroc_(&nRows, &blockSize, &myProcRow, &root, &nProcRows);
-		myProcColsOffset = npreroc_(&nCols, &blockSize, &myProcCol, &root, &nProcRows);
+		myProcColsOffset = npreroc_(&nCols, &blockSize, &myProcCol, &root, &nProcCols);
 	} else {
 		myProcRows = myProcCols = myProcRowsOffset = myProcColsOffset = 0;
 	}
@@ -159,6 +159,13 @@ SMatrix& SMatrix::operator =(const SMatrix& matrix) {
 	nCols = matrix.nCols;
 	nProcRows = matrix.nProcRows;
 	nProcCols = matrix.nProcCols;
+	myProcRow = matrix.myProcRow;
+	myProcCol = matrix.myProcCol;
+	myProcColsOffset = matrix.myProcColsOffset;
+	myProcRowsOffset = matrix.myProcRowsOffset;
+	myProcRows = matrix.myProcRows;
+	myProcCols = matrix.myProcCols;
+	myProcSize = matrix.myProcSize;
 	create(matrix.icon);
 	memcpy(data, matrix.data, myProcSize * sizeof(SType));
 	return *this;
@@ -257,6 +264,7 @@ void SMatrix::wrbuf(SType* buf) {
 				(i < myProcColsOffset + myProcCols)){
 					buf[i] = data[(i - myProcRowsOffset) + myProcRows * (i - myProcColsOffset)];
 					//cout<<"rank "<<rank<<" i,j "<<i<<" data: "<<buf[i]<<'\n';
+					//cout<<"myProcRowsOffset "<<myProcRowsOffset<<" myProcColsOffset "<<myProcColsOffset<<'\n';
 				}
 	}
     return;
